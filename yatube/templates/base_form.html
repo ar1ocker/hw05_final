@@ -1,0 +1,26 @@
+{# Блоки для заполнения - title, card-header, button-name, additional-links #}
+
+{% extends "base_card.html" %}
+
+{% comment "" %}
+Базовый шаблон для всех форм на отдельной странице
+{% endcomment %}
+
+
+{% load user_filters %}
+
+{% block card-body %}
+  <form method="post" {% if action_url %} action="{% url action_url %}" {% endif %} enctype="multipart/form-data">
+    {% include 'includes/form_errors.html' %}
+    {% include 'includes/form.html' %}
+
+    <div class="col-md-6 offset-md-4">
+      <button type="submit" class="btn btn-primary">
+        {% block button-name %}{% endblock button-name %}
+      </button>
+
+      {% block additional-links %}{% endblock additional-links %}
+
+    </div>
+  </form>
+{% endblock card-body %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load thumbnail %}
+
+{% block title %}Пост {{ post.text|truncatechars:30 }}{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <aside class="col-12 col-md-3 py-2 px-sm-0">
+      <ul class="list-group list-group-flush ">
+        <li class="list-group-item">
+          Дата публикации: {{ post.pub_date }}
+        </li>
+        {% if post.group %}
+          <li class="list-group-item">
+            Группа: {{ post.group.title }}
+          </li>
+        {% endif %}
+        <li class="list-group-item">
+            Автор: {{ post.author.get_full_name }}
+            <a class="text-decoration-none" href={% url 'posts:profile' post.author.username %}>@{{ post.author.username }}</a>
+          </li>
+        <li class="list-group-item">
+          <a href="{% url 'posts:profile' post.author.username %}" class="btn btn-primary my-1 btn-sm">
+            Посты автора
+          </a>
+          {% if post.group %}
+            <a href="{% url 'posts:group_list' post.group.slug %}" class="btn btn-primary btn-sm">
+              Посты группы
+            </a>
+          {% endif %}
+        </li>
+      </ul>
+    </aside>
+    <article class="col-12 col-md-9 border rounded my-md-2 py-2">
+      {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+        <img class="card-img" src="{{ im.url }}">
+      {% endthumbnail %}
+      <p>
+        {{ post.text }}
+      </p>
+
+      {% if user.pk == post.author.pk %}
+        <a class="btn btn-primary py-1 my-1 btn-sm" href="{% url 'posts:post_edit' post.pk %}">
+          Редактировать
+        </a>
+      {% endif %}
+    </article>
+    <div class="col-12 col-md-9 offset-md-3 border rounded my-sm-2 my-md-1 py-2">
+      <form method="post" action={% url 'posts:add_comment' post.pk %}>
+        {% include 'includes/form_errors.html' %}
+        {% include 'includes/form.html' %}
+        <button type="submit" class="btn btn-primary btn-sm">
+          Комментировать
+        </button>
+      </form>
+      <hr>
+      <p>Комментарии ({{ comments.count }})</p>
+        {% for comment in comments %}
+          <div class="{% if forloop.last is not True %}mb-4{% endif %}">
+            <div class="d-flex justify-content-between">
+              <div>
+                {{ comment.author.get_full_name }}
+                <a class="text-decoration-none" href="{% url 'posts:profile' comment.author.username %}">
+                  @{{ comment.author.username }}
+                </a>
+              </div>
+              <span class="text-muted">{{ post.pub_date }}</span>
+            </div>
+            <p>
+              {{ comment.text }}
+            </p>
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

@@ -1,0 +1,10 @@
+{% extends 'base_card.html' %}
+
+{% block title %}404{% endblock title %}
+
+{% block card-header %}Ошибка 404{% endblock card-header %}
+
+{% block card-body %}
+  <p>Страницы с адресом {{ path }} не существует</p>
+  <a class="btn btn-primary" href={% url 'posts:index' %}>Главная страница</a>
+{% endblock card-body %}

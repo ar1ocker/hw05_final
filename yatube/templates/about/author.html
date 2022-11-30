@@ -1,0 +1,24 @@
+{% extends 'base_card.html' %}
+
+{% load static %}
+
+{% block title %}Об авторе{% endblock title %}
+
+{% block card-header %}Об авторе{% endblock card-header %}
+
+{% block card-body %}
+  <h3 class="text-center">Гречкин Николай</h3>
+  <hr>
+  
+  <article>
+    <p class="text-justify">
+      Веселый, добрый, прекрасный и самое главное НЕИМОВЕРНО СКРОМНЫЙ ЧЕЛОВЕК :)
+    </p>
+  </article>
+
+  <img src={% static 'img/onemanband.jpg' %} class="img-fluid rounded mx-auto" alt="Человек-оркестр">
+  <hr>
+  <h4 class="text-center">Ссылки</h4>
+  <a href="https://github.com/ar1ocker/"><button class="btn btn-primary" type="submit">Github.com</button></a>
+
+{% endblock card-body %}

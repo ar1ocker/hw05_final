@@ -1,0 +1,25 @@
+{% extends 'base_form.html' %}
+
+{% block title %}
+  {% if is_edit %}
+    Редактировать запись
+  {% else %}
+    Добавить запись
+  {% endif %}
+{% endblock title %}
+
+{% block card-header %}
+  {% if is_edit %}
+    Редактировать запись
+  {% else %}
+    Добавить запись
+  {% endif %}
+{% endblock card-header %}
+
+{% block button-name %}
+  {% if is_edit %}
+    Сохранить
+  {% else %}
+    Добавить
+  {% endif %}
+{% endblock button-name %}

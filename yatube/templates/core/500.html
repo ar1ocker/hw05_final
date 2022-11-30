@@ -1,0 +1,10 @@
+{% extends 'base_card.html' %}
+
+{% block title %}500{% endblock title %}
+
+{% block card-header %}Ошибка 500{% endblock card-header %}
+
+{% block card-body %}
+  <p>Ошибка сервера</p>
+  <a class="btn btn-primary" href={% url 'posts:index' %}>Главная страница</a>
+{% endblock card-body %}

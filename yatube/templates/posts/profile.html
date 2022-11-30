@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load thumbnail %}
+
+{% block title %}{{ profile_user.get_full_name }} профайл пользователя{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <aside class="col-12 col-md-3 mx-1 py-2 mx-sm-0 px-sm-0">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item h4 py-4">
+          {{ profile_user.get_full_name }}
+          <a class="text-decoration-none" href={% url 'posts:profile' profile_user.username %}>@{{ profile_user.username }}</a>
+        </li>
+        <li class="list-group-item">
+          Постов: {{ page_obj.paginator.count }}
+        </li>
+        {% if user.is_authenticated and profile_user != user %}
+          <li class="list-group-item">
+            {% if following %}
+              <a class="btn btn-outline-primary btn-sm" href="{% url 'posts:profile_unfollow' profile_user.username %}" role="button">
+                Отписаться
+              </a>
+            {% else %}
+              <a class="btn btn-primary btn-sm" href="{% url 'posts:profile_follow' profile_user.username %}" role="button">
+                Подписаться
+              </a>
+            {% endif %}
+          {% endif %}
+        </li>
+      </ul>
+    </aside>
+    {% for post in page_obj %}
+      <article class="col-12 col-md-9 {% if forloop.first %}{% else %}offset-md-3{% endif %} my-md-2 py-2 border rounded">
+        {% include 'posts/includes/post_in_list.html' with post=post set_group=True %}
+      </article>
+    {% endfor %}
+  </div>
+  {% include 'includes/paginator.html' %}
+
+{% endblock content %}

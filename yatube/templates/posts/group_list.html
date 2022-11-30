@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load thumbnail %}
+
+{% block title %}Записи сообщества {{ group.title }}{% endblock title %}
+
+{% block content %}
+  <h1 class="text-center">{{ group.title }}</h1>
+  <div class="blockquote text-center">
+    <p>{{ group.description }}</p>
+  </div>
+  {% for post in page_obj %}
+    <div class="row py-0">
+      <aside class="col-12 col-md-3 py-2 px-sm-0">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Автор: {{ post.author.get_full_name }}
+            <a class="text-decoration-none" href={% url 'posts:profile' post.author.username %}>@{{ post.author.username }}</a>
+          </li>
+          <li class="list-group-item">
+            <a href="{% url 'posts:profile' post.author.username %}" class="btn btn-primary btn-sm">
+              Посты автора
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <article class="col-12 col-md-9 my-md-2 py-2 border rounded">
+        {% include 'posts/includes/post_in_list.html' with post=post %}
+      </article>
+    </div>
+  {% endfor %}
+
+  {% include 'includes/paginator.html' %}
+{% endblock content %}
