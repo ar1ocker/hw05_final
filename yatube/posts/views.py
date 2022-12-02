@@ -81,7 +81,7 @@ def profile(request, username):
     return render(request, 'posts/profile.html', context)
 
 
-def post_detail(request, post_id):
+def post_detail(request, post_id, override_comment_form=None):
     '''
         Отображение информации определенного поста
     '''
@@ -91,7 +91,7 @@ def post_detail(request, post_id):
     comments = Comment.objects.filter(post=post.pk).select_related('author')
     context = {
         'post': post,
-        'form': comment_form,
+        'form': override_comment_form or comment_form,
         'comments': comments
     }
 
@@ -158,13 +158,11 @@ def add_comment(request, post_id):
         form.save()
         return redirect('posts:post_detail', post.pk)
     else:
-        comments = (Comment.objects
-                    .filter(post=post.pk)
-                    .select_related('author'))
-
-        return render(request,
-                      'posts/post_detail.html',
-                      {'post': post, 'form': form, 'comments': comments})
+        # Тут используем вызов вьюхи потому, что нам нужно как то
+        # отображать ошибки формы, если просто редиректить - ошибка не
+        # отобразится. На данный момент форма не содержит кучи полей,
+        # но кто знает, как оно будет дальше
+        return post_detail(request, post_id, override_comment_form=form)
 
 
 @login_required
@@ -175,9 +173,21 @@ def follow_index(request):
 
     user = request.user
 
-    # Следующая строка вызывает вот такой довольно оптимальный запрос
     # SELECT * FROM "posts_post" WHERE "posts_post"."author_id"
     # IN (SELECT U0."author_id" FROM "posts_follow" U0 WHERE U0."user_id" = 7)
+    # ORDER BY "posts_post"."pub_date" DESC
+
+    # Предложенный вами запрос
+    # Post.objects.filter(author__following__user=user)
+    # вызывает два JOIN, подскажите, какой запрос будет оптимальней?
+    #
+    # Код запроса
+    # SELECT * FROM "posts_post"
+    # INNER JOIN "auth_user"
+    # ON ("posts_post"."author_id" = "auth_user"."id")
+    # INNER JOIN "posts_follow"
+    # ON ("auth_user"."id" = "posts_follow"."author_id")
+    # WHERE "posts_follow"."user_id" = 1
     # ORDER BY "posts_post"."pub_date" DESC
     post = (Post.objects
             .filter(author__in=user.follower.values('author'))
@@ -211,8 +221,13 @@ def profile_follow(request, username):
     if user == author:
         return profile_redirect
 
-    if not Follow.objects.filter(user=user, author=author).exists():
-        Follow.objects.create(user=user, author=author)
+    # Изначально использовал .exists() из тех соображений,
+    # что нам не нужен объект, а значит таскать его из базы нет
+    # никакой необходимости
+    # Подскажите, насколько Django ORM ленив и не будет ли шорткат
+    # get_or_create нагружать канал между базой и Django
+    # в реальном приложении при большом потоке запросов?
+    Follow.objects.get_or_create(user=user, author=author)
 
     return profile_redirect
 

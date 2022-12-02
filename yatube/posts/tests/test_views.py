@@ -1,6 +1,5 @@
 import shutil
 import tempfile
-import time
 
 from django import forms
 from django.conf import settings
@@ -343,7 +342,6 @@ class CacheTest(TestCase):
         # Чистим кеш
         cache.clear()
         page_url = reverse('posts:index')
-        cache_timeout = 20 + 2
 
         self.assertIn(self.test_text,
                       self.client.get(page_url).content.decode(),
@@ -355,7 +353,8 @@ class CacheTest(TestCase):
                          'При кешировании не учитываются get параметры')
 
         self.test_post.delete()
-        time.sleep(cache_timeout)
+        # Имитируем инвалидацию кеша по таймеру
+        cache.clear()
 
         self.assertNotIn(self.test_text,
                          self.client.get(page_url).content.decode(),
@@ -367,7 +366,6 @@ class CacheTest(TestCase):
         '''
         cache.clear()
         page_url = reverse('posts:index')
-        cache_timeout = 20 + 2
 
         self.assertIn(CacheTest.test_text,
                       self.client.get(page_url).content.decode(),
@@ -379,7 +377,8 @@ class CacheTest(TestCase):
                          'При кешировании не учитываются get параметры')
 
         self.test_post.delete()
-        time.sleep(cache_timeout)
+        # Имитируем инвалидацию кеша по таймеру
+        cache.clear()
 
         self.assertNotIn(self.test_text,
                          self.client.get(page_url).content.decode(),
