@@ -1,3 +1,28 @@
-# hw05_final
+# Описание проекта Yatube
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+Yatube - это веб-приложение для сбора отзывов на произведения (книги, фильмы и прочее).
+
+## Используемые технологии
+
+* Django - фреймворк для веб-приложений на языке Python.
+* Bootstrap - фронтенд фреймворк, помогающий создавать красивый и адаптивный дизайн.
+
+## Функциональность
+
+* Авторизация и регистрация пользователей.
+* Создание, редактирование и удаление записей о произведениях.
+* Добавление и просмотр отзывов на произведения.
+* Подписка на интересующих авторов.
+
+## Установка и запуск
+
+Для установки и запуска проекта необходимо:
+
+1. Склонировать репозиторий: `git clone https://github.com/ar1ocker/hw05_final.git`
+2. Перейти в директорию: `cd hw05_final`
+3. Установить зависимости: `pip install -r requirements.txt`
+4. Перейти в директорию: `cd yatube`
+5. Применить миграции: `python manage.py migrate`
+6. Запустить сервер: `python manage.py runserver`
+
+![Screenshot 2023-05-19 at 19-07-39 Пост Lorem ipsum dolor sit amet c…](https://github.com/ar1ocker/hw05_final/assets/109543340/f8e3612e-d2aa-4a37-ae99-94eccbd8c95e)
